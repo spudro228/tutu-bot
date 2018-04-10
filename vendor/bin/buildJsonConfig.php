@@ -1,0 +1,1 @@
+../moodev/weasel/bin/buildJsonConfig.php
