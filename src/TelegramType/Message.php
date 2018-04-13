@@ -247,7 +247,6 @@ class Message
     }
 
     /**
-     * @JsonProperty(name="reply_to_message", type="TutuBot\TelegramType\Message")
      * @param null|Message $replyToMessage
      * @return Message
      */

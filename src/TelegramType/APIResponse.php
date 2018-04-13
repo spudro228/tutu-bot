@@ -20,9 +20,7 @@ class APIResponse
      */
     protected $ok;
 
-    /**
-     * @var array|Update[]
-     */
+
     protected $result;
 
     /**
@@ -54,27 +52,24 @@ class APIResponse
 
     /**
      * @JsonProperty(name="ok", type="bool")
-     * @param int $ok
+     * @param bool $ok
      * @return APIResponse
      */
-    public function setOk(int $ok): self
+    public function setOk(bool $ok): self
     {
         $this->ok = $ok;
 
         return $this;
     }
 
-    /**
-     * @return array|Update[]
-     */
-    public function getResult(): array
+
+    public function getResult()
     {
         return $this->result;
     }
 
     /**
-     * @JsonProperty(name="result", type="TutuBot\TelegramType\Update[]")
-     * @param array|Update[] $result
+     * @JsonProperty(name="result", type="raw")
      * @return APIResponse
      */
     public function setResult($result): self

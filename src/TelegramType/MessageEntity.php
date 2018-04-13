@@ -8,5 +8,7 @@ namespace TutuBot\TelegramType;
 
 class MessageEntity
 {
+  // todo: https://core.telegram.org/bots/api#messageentity
+
 
 }

@@ -9,7 +9,7 @@ namespace TutuBot;
 use Amp\Artax\Client;
 use Amp\Artax\Response;
 use Amp\Promise;
-use JsonSchema\Exception\InvalidArgumentException;
+use TutuBot\TelegramSenderConfiguration\SendableInterface;
 use TutuBot\TelegramType\APIResponse;
 use TutuBot\TelegramType\Update;
 use Weasel\JsonMarshaller\JsonMapper;
@@ -43,11 +43,11 @@ class BotAPI
     {
         return call(function () {
             try {
-                $url = GET_MESSAGE_METHOD . ($this->lastId ? '?offset=' . ($this->lastId + 1) : null);
+                $url = GET_UPDATES_METHOD . ($this->lastId ? '?offset=' . ($this->lastId + 1) : null);
                 \var_dump($url);
                 /** @var Response $response */
                 $response = yield $this->client->request($url);
-
+                \var_dump(yield $response->getBody());
                 /**
                  * @var APIResponse $apiResponse
                  */
@@ -73,7 +73,6 @@ class BotAPI
 
                     return $updates;
                 }
-//                \var_dump('Hello', $result);
                 /**
                  * @var Update[] $update
                  */
@@ -81,24 +80,23 @@ class BotAPI
                 $this->lastId = $this->getLastUpdateId($update);
                 return $update;
             } catch (\InvalidArgumentException $exception) {
-                --$this->lastId;
                 //@todo тут чет придумать надо получе
-//                sprintf('%s \n %s', $exception->getMessage(), $response->getBody());
+                print $exception->getMessage() . PHP_EOL;
                 return [];
             }
         });
     }
 
-    public function sendMessage($chatId, $text, $reply_to_message_id = null): Promise
-    {
-        return call(function () use ($chatId, $text, $reply_to_message_id) {
-
-            /** @var Response $response */
-            $response = yield $this->client->request(SEND_MESSAGE . '?chat_id=' . $chatId . '&text=' . $text . '&reply_to_message_id=' . $reply_to_message_id);
-
-            return yield $response->getBody();
-        });
-    }
+//    public function sendMessage($chatId, $text, $reply_to_message_id = null): Promise
+//    {
+//        return call(function () use ($chatId, $text, $reply_to_message_id) {
+//
+//            /** @var Response $response */
+//            $response = yield $this->client->request(SEND_MESSAGE . '?chat_id=' . $chatId . '&text=' . $text . '&reply_to_message_id=' . $reply_to_message_id);
+//
+//            return yield $response->getBody();
+//        });
+//    }
 
 
     /**
@@ -108,5 +106,21 @@ class BotAPI
     protected function getLastUpdateId(array $updates): int
     {
         return ($_ = $updates[\count($updates) - 1] ?? null) ? $_->getId() : 0;
+    }
+
+    /**
+     * @todo выделить makeRequest, который берет параметры для запроса , делает запрос и возвращать Message или APIRequest чтобы определить отрправлено ли сообщение
+     * @param SendableInterface $sendable
+     * @return string
+     */
+    public function send(SendableInterface $sendable)
+    {
+        $v = $sendable->getValues();
+        $v->join(TELEGRAM_API_PATH . '/' . $sendable->getMethod());
+
+        \var_dump($v->__toString());
+        $this->client->request($v->__toString())->onResolve(function ($_, $data) {
+//            var_dump($data);
+        });
     }
 }
