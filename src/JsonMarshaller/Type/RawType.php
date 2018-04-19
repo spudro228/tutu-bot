@@ -13,7 +13,6 @@ class RawType implements JsonType
 {
 
     /**
-     * @todo КАСТЫЛЬ ПИЗДОС АААА
      * Deserialize something to its PHP type.
      * @param mixed $value
      * @param \Weasel\JsonMarshaller\JsonMapper $mapper

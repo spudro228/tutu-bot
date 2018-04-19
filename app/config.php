@@ -10,3 +10,5 @@ define('GET_UPDATES_METHOD', TELEGRAM_API_PATH . '/getUpdates');
 
 define('PING', TELEGRAM_API_PATH . '/getMe');
 
+define('HTTPS_PROXY', '45.76.146.253:8888');
+

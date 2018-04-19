@@ -3,29 +3,35 @@
 require '../vendor/autoload.php';
 require 'config.php';
 
-use TutuBot\TelegramType\APIResponse;
+\putenv('HTTPS_PROXY=' . HTTPS_PROXY);
+
 use Weasel\WeaselDoctrineAnnotationDrivenFactory;
+use TutuBot\Helper\EmojiCodeOfCountryName;
+use TutuBot\TelegramSenderConfiguration\MessageConfig;
+use TutuBot\JsonMarshaller\Type\RawType;
 
 $client = new Amp\Artax\DefaultClient();
-$_ = new APIResponse();
 
 $factory = new WeaselDoctrineAnnotationDrivenFactory();
 $mapper = $factory->getJsonMapperInstance();
-$rawType = new \TutuBot\JsonMarshaller\Type\RawType();
-$mapper->registerJsonType('raw', $rawType);
+$mapper->registerJsonType('raw', new RawType()); // register custom type for marshaling
 
 $bot = new \TutuBot\BotAPI($client, $mapper);
-
 
 \Amp\Loop::run(function () use ($bot) {
     while (true) {
         /** @var \TutuBot\TelegramType\Update[] $updates */
         while ($updates = yield $bot->getUpdates()) {
             foreach ($updates as $update) {
-                var_dump($update);
-                $bot->send(new \TutuBot\TelegramSenderConfiguration\MessageConfig('Answser!', $update->getMessage()->getFrom()->getId()));
+                //handle update
+                $bot->send(
+                    new MessageConfig(
+                        (new EmojiCodeOfCountryName($update->getMessage()))->printCode() ?? 'Country not exist',
+                        $update->getMessage()->getFrom()->getId()
+                    )
+                );
             }
-            sleep(1);
+            sleep(1 / 50);
         }
     }
 });

@@ -14,6 +14,7 @@ use TutuBot\TelegramType\APIResponse;
 use TutuBot\TelegramType\Update;
 use Weasel\JsonMarshaller\JsonMapper;
 use function \Amp\call;
+use function \Amp\asyncCall;
 
 class BotAPI
 {
@@ -87,18 +88,6 @@ class BotAPI
         });
     }
 
-//    public function sendMessage($chatId, $text, $reply_to_message_id = null): Promise
-//    {
-//        return call(function () use ($chatId, $text, $reply_to_message_id) {
-//
-//            /** @var Response $response */
-//            $response = yield $this->client->request(SEND_MESSAGE . '?chat_id=' . $chatId . '&text=' . $text . '&reply_to_message_id=' . $reply_to_message_id);
-//
-//            return yield $response->getBody();
-//        });
-//    }
-
-
     /**
      * @param Update[] $updates
      * @return int
@@ -113,14 +102,15 @@ class BotAPI
      * @param SendableInterface $sendable
      * @return string
      */
-    public function send(SendableInterface $sendable)
+    public function send(SendableInterface $sendable): void
     {
-        $v = $sendable->getValues();
-        $v->join(TELEGRAM_API_PATH . '/' . $sendable->getMethod());
+        $values = $sendable->getValues();
+        $values->join(TELEGRAM_API_PATH . '/' . $sendable->getMethod());
 
-        \var_dump($v->__toString());
-        $this->client->request($v->__toString())->onResolve(function ($_, $data) {
-//            var_dump($data);
+        asyncCall(function () use ($values) {
+            \var_dump($values->__toString());
+
+            $this->client->request($values->__toString());
         });
     }
 }

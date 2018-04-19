@@ -14,12 +14,12 @@ class Update
     protected $id;
 
     /**
-     * @var array|Message
+     * @var Message
      */
     protected $message;
 
     /**
-     * @var array|Message
+     * @var Message
      */
     protected $editedMessage;
 
@@ -78,11 +78,11 @@ class Update
     }
 
     /**
-     * @return array|Message
+     * @return Message
      */
-    public function getMessage()
+    public function getMessage(): Message
     {
-        return $this->message;
+        return $this->message ?? $this->editedMessage;
     }
 
     /**

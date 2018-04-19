@@ -8,6 +8,7 @@ namespace TutuBot\TelegramSenderConfiguration;
 
 use Purl\Url;
 
+
 class MessageConfig extends Config implements SendableInterface
 {
     /**

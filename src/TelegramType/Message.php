@@ -68,6 +68,11 @@ class Message
     protected $replyToMessage;
 
     /**
+     * @var null|int
+     */
+    protected $editDate;
+
+    /**
      * @return int
      */
     public function getId(): int
@@ -272,6 +277,25 @@ class Message
     public function setText(?string $text): Message
     {
         $this->text = $text;
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getEditDate(): ?int
+    {
+        return $this->editDate;
+    }
+
+    /**
+     * @JsonProperty(name="edit_date", type="int")
+     * @param int|null $editDate
+     * @return Message
+     */
+    public function setEditDate(?int $editDate): Message
+    {
+        $this->editDate = $editDate;
         return $this;
     }
 }

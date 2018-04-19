@@ -11,7 +11,8 @@
     "require": {
         "amphp/artax": "^3.0",
         "moodev/weasel": "^0.17.0",
-        "jwage/purl": "^0.0.7"
+        "jwage/purl": "^0.0.7",
+        "spatie/emoji": "^1.0"
     },
     "autoload": {
         "psr-4": {
