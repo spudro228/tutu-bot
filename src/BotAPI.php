@@ -45,10 +45,8 @@ class BotAPI
         return call(function () {
             try {
                 $url = GET_UPDATES_METHOD . ($this->lastId ? '?offset=' . ($this->lastId + 1) : null);
-                \var_dump($url);
                 /** @var Response $response */
                 $response = yield $this->client->request($url);
-                \var_dump(yield $response->getBody());
                 /**
                  * @var APIResponse $apiResponse
                  */
@@ -108,8 +106,6 @@ class BotAPI
         $values->join(TELEGRAM_API_PATH . '/' . $sendable->getMethod());
 
         asyncCall(function () use ($values) {
-            \var_dump($values->__toString());
-
             $this->client->request($values->__toString());
         });
     }
